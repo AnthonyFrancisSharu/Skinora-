@@ -1,0 +1,511 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skinora| Product</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+          --primary: #1a1a1a;
+          --accent: #c5a880;
+          --white: #ffffff;
+          --text-muted: #666;
+          --bg-light: #f9f9f9;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--white); color: var(--primary); overflow-x: hidden; }
+
+        nav {
+          position: fixed; top: 0; width: 100%;
+          background: rgba(255,255,255,0.98);
+          display: flex; justify-content: space-between; align-items: center;
+          padding: 15px 5%; z-index: 1000;
+          border-bottom: 1px solid #eee;
+        }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        .nav-center { display: flex; gap: 25px; }
+        .nav-center a { text-decoration: none; color: var(--primary); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .cart-icon { position: relative; cursor: pointer; }
+        .cart-count { position: absolute; top: -10px; right: -10px; background: var(--accent); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; }
+
+        /* BREADCRUMB */
+        .breadcrumb { padding: 85px 5% 15px; font-size: 0.78rem; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--primary); }
+
+        /* PRODUCT LAYOUT */
+        .product-page { display: flex; gap: 60px; padding: 10px 5% 80px; align-items: flex-start; }
+
+        /* LEFT: IMAGE GALLERY */
+        .gallery { flex: 1; max-width: 55%; position: sticky; top: 90px; }
+        .main-image-wrap { background: var(--bg-light); padding: 40px; display: flex; align-items: center; justify-content: center; height: 520px; }
+        .main-image-wrap img { width: 100%; height: 100%; object-fit: contain; transition: all 0.3s ease; }
+        .thumb-row { display: flex; gap: 10px; margin-top: 12px; overflow-x: auto; padding-bottom: 5px; }
+        .thumb { width: 80px; height: 80px; background: var(--bg-light); padding: 8px; cursor: pointer; border: 2px solid transparent; flex-shrink: 0; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+        .thumb img { width: 100%; height: 100%; object-fit: contain; }
+        .thumb.active { border-color: var(--primary); }
+        .thumb:hover { border-color: #ccc; }
+
+        /* RIGHT: PRODUCT INFO */
+        .product-info { flex: 1; max-width: 45%; }
+        .brand-tag { color: var(--accent); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; }
+        .brand-tag:hover { text-decoration: underline; }
+        .product-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; margin: 10px 0 8px; line-height: 1.2; }
+        .skin-type-badge { display: inline-block; background: #f0ebe3; color: #8a6a40; padding: 4px 12px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; border-radius: 2px; }
+        .short-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 20px; }
+        .price-block { margin: 20px 0; }
+        .price-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; }
+        .price-main { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+
+        /* INSTALLMENT */
+        .installment { background: #f9f7f4; border: 1px solid #e8ddd0; padding: 12px 15px; margin: 15px 0; font-size: 0.8rem; color: #5a4a35; border-radius: 3px; }
+        .installment strong { color: var(--primary); }
+
+        /* ADD TO CART */
+        .add-section { display: flex; gap: 10px; margin: 20px 0; }
+        .qty-input { width: 65px; padding: 12px; border: 1px solid #ddd; text-align: center; font-size: 0.9rem; outline: none; }
+        .qty-input:focus { border-color: var(--primary); }
+        .btn-add { flex: 1; background: var(--primary); color: white; border: none; padding: 14px 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s; }
+        .btn-add:hover { background: #333; }
+        .btn-add.added { background: #4a7c59; }
+
+        /* TRUST BADGES */
+        .trust-badges { border-top: 1px solid #eee; margin-top: 20px; padding-top: 20px; }
+        .badge-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.82rem; color: #444; }
+        .badge-item i { color: var(--accent); width: 18px; }
+
+        /* TABS */
+        .tabs-section { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
+        .tab-buttons { display: flex; gap: 0; border-bottom: 1px solid #eee; margin-bottom: 0; flex-wrap: wrap; }
+        .tab-btn { padding: 12px 20px; border: none; background: none; cursor: pointer; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-content { display: none; padding: 20px 0; }
+        .tab-content.active { display: block; }
+        .tab-content p, .tab-content li { font-size: 0.88rem; color: #444; line-height: 1.8; }
+        .tab-content ul { padding-left: 18px; }
+        .tab-content li { margin-bottom: 6px; }
+        .tab-content strong { color: var(--primary); }
+        .ingredient-text { font-size: 0.78rem; color: #666; line-height: 1.9; word-break: break-word; }
+
+        /* RELATED SECTION */
+        .related-section { padding: 60px 5%; background: var(--bg-light); }
+        .section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; margin-bottom: 30px; }
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .related-card { background: white; text-align: center; padding-bottom: 15px; cursor: pointer; text-decoration: none; color: inherit; display: block; transition: all 0.3s; }
+        .related-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .related-img { background: var(--bg-light); height: 200px; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .related-img img { width: 100%; height: 100%; object-fit: contain; }
+        .related-brand { color: var(--accent); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; margin: 10px 5px 3px; }
+        .related-name { font-size: 0.82rem; margin: 0 10px 5px; }
+        .related-price { font-size: 0.85rem; font-weight: 700; }
+
+        /* CART OVERLAY */
+        .cart-overlay { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: white; z-index: 2000; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: 0.4s; padding: 30px; display: flex; flex-direction: column; }
+        .cart-overlay.active { right: 0; }
+        .cart-items { flex: 1; overflow-y: auto; margin-top: 20px; }
+        .cart-item { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-item img { width: 70px; height: 70px; object-fit: cover; }
+
+        /* FOOTER */
+        .site-footer { background: #f9f9f9; margin-top: 60px; padding: 70px 5% 0; }
+        .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.6fr; gap: 40px; max-width: 1200px; margin: 0 auto; padding-bottom: 50px; border-bottom: 1px solid #e6e0d6; text-align: left; }
+        .footer-brand .logo { font-size: 1.8rem; display: block; margin-bottom: 14px; }
+        .footer-brand p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.7; max-width: 280px; margin-bottom: 22px; }
+        .footer-social { display: flex; gap: 12px; }
+        .footer-social a { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; color: var(--primary); text-decoration: none; transition: all 0.3s ease; }
+        .footer-social a:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .footer-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; font-weight: 700; color: var(--primary); }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 12px; }
+        .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: all 0.3s ease; }
+        .footer-col a:hover { color: var(--accent); }
+        .footer-newsletter p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; line-height: 1.6; max-width: 280px; }
+        .newsletter-form { display: flex; border-bottom: 1px solid var(--primary); max-width: 280px; }
+        .newsletter-form input { flex: 1; border: none; background: transparent; padding: 10px 5px; font-size: 0.85rem; outline: none; font-family: inherit; }
+        .newsletter-form button { background: none; border: none; cursor: pointer; color: var(--primary); font-size: 1.1rem; padding: 0 5px; }
+        .newsletter-msg { font-size: 0.78rem; color: #4a7c59; margin-top: 10px; min-height: 1em; }
+        .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 25px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .footer-bottom p { font-size: 0.75rem; color: #999; }
+        .payment-icons { display: flex; gap: 12px; color: #aaa; font-size: 1.4rem; }
+
+        @media (max-width: 900px) {
+          .product-page { flex-direction: column; gap: 30px; }
+          .gallery, .product-info { max-width: 100%; position: static; }
+          .main-image-wrap { height: 350px; }
+          .nav-center { display: none; }
+          .cart-overlay { width: 100%; right: -100%; }
+          .footer-grid { grid-template-columns: 1fr 1fr; }
+          .footer-brand { grid-column: 1 / -1; }
+          .footer-brand p { max-width: 100%; }
+        }
+        @media (max-width: 560px) {
+          .footer-grid { grid-template-columns: 1fr; }
+          .footer-bottom { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="logo">Skinora</a>
+    <div class="nav-center">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#shop">Shop All</a>
+        <a href="index.html#about">Our Story</a>
+    </div>
+    <div class="nav-right">
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </div>
+</nav>
+
+<div class="breadcrumb">
+    <a href="index.html">Home</a> &nbsp;/&nbsp;
+    <a href="index.html#shop">Shop All</a> &nbsp;/&nbsp;
+    <span id="bcBrand"></span> &nbsp;/&nbsp;
+    <span id="bcName" style="color:var(--primary); font-weight:600;"></span>
+</div>
+
+<div class="product-page">
+    <!-- LEFT: GALLERY -->
+    <div class="gallery">
+        <div class="main-image-wrap">
+            <img id="mainImg" src="" alt="Product Image" onerror="this.src='https://via.placeholder.com/400x400?text=No+Image'">
+        </div>
+        <div class="thumb-row" id="thumbRow"></div>
+    </div>
+
+    <!-- RIGHT: INFO -->
+    <div class="product-info">
+        <a class="brand-tag" id="pBrand" href="index.html#shop"></a>
+        <h1 class="product-title" id="pName"></h1>
+        <span class="skin-type-badge" id="pSkin"></span>
+        <p class="short-desc" id="pDesc"></p>
+
+        <div class="price-block">
+            <p class="price-label">Price</p>
+            <p class="price-main" id="pPrice"></p>
+        </div>
+
+        <div class="installment">
+            Pay in <strong>3 interest-free installments</strong> — or earn <strong>cashback</strong> with your payment card.
+        </div>
+
+        <div class="add-section">
+            <input type="number" value="1" min="1" max="10" id="qtyInput" class="qty-input">
+            <button class="btn-add" id="addBtn" onclick="addToCartFromPage()">
+                <i class="fas fa-shopping-bag" style="margin-right:8px;"></i> Add to Bag
+            </button>
+        </div>
+
+        <div class="trust-badges">
+            <div class="badge-item"><i class="fas fa-truck"></i> Free delivery on orders over Rs. 5,000</div>
+            <div class="badge-item"><i class="fas fa-shield-alt"></i> 100% Authentic — Directly Imported</div>
+            <div class="badge-item"><i class="fas fa-undo"></i> Easy returns within 7 days</div>
+            <div class="badge-item"><i class="fas fa-lock"></i> Secure payments guaranteed</div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs-section">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="openTab('details', this)">Details</button>
+                <button class="tab-btn" onclick="openTab('benefits', this)">Benefits</button>
+                <button class="tab-btn" onclick="openTab('howto', this)">How to Use</button>
+                <button class="tab-btn" onclick="openTab('ingredients', this)">Ingredients</button>
+                <button class="tab-btn" onclick="openTab('shipping', this)">Shipping</button>
+            </div>
+
+            <div class="tab-content active" id="tab-details">
+                <p id="tabDesc"></p>
+            </div>
+
+            <div class="tab-content" id="tab-benefits">
+                <ul id="tabBenefits"></ul>
+            </div>
+
+            <div class="tab-content" id="tab-howto">
+                <p id="tabHowTo"></p>
+            </div>
+
+            <div class="tab-content" id="tab-ingredients">
+                <p class="ingredient-text" id="tabIngredients"></p>
+            </div>
+
+            <div class="tab-content" id="tab-shipping">
+                <p><strong>Order Processing Time:</strong><br>Delivery takes 1–3 working days excluding weekends and public holidays from day of dispatch.</p>
+                <br>
+                <p><strong>Delivery Charges:</strong><br>Standard Delivery Charge LKR 350.00. Free delivery on orders over Rs. 5,000.</p>
+                <br>
+                <p><strong>Colombo & Suburbs:</strong><br>Same-day delivery available for orders placed before 3:00 PM.</p>
+                <br>
+                <p><strong>Outstation Delivery:</strong><br>1–7 working days depending on location.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+<div class="related-section">
+    <h2 class="section-title">You May Also Like</h2>
+    <div class="related-grid" id="relatedGrid"></div>
+</div>
+
+<!-- SIDE CART -->
+<div class="cart-overlay" id="cartOverlay">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Your Bag</h3>
+        <i class="fas fa-times" onclick="toggleCart()" style="cursor:pointer"></i>
+    </div>
+    <div class="cart-items" id="cartContainer"></div>
+    <div style="padding-top:20px; border-top:1px solid #eee;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;">
+            <span>Subtotal</span>
+            <span id="totalPrice">Rs. 0.00</span>
+        </div>
+        <button style="width:100%; background:var(--primary); color:white; padding:15px; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">Checkout Now</button>
+    </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col footer-brand">
+      <a href="index.html" class="logo">Skinora</a>
+      <p>Original clinical and Korean skincare products for all Sri Lankan skin types. Guaranteed authenticity in every bottle.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="index.html#shop">All Products</a></li>
+        <li><a href="index.html#shop">Cetaphil</a></li>
+        <li><a href="index.html#shop">CeraVe</a></li>
+        <li><a href="index.html#shop">K-Beauty</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Returns &amp; Refunds</a></li>
+        <li><a href="#">Track My Order</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col footer-newsletter">
+      <h4>Stay Glowing</h4>
+      <p>Subscribe for skincare tips, new arrivals and exclusive offers straight to your inbox.</p>
+      <form class="newsletter-form" onsubmit="return subscribeNewsletter(event)">
+        <input type="email" placeholder="Your email address" required>
+        <button type="submit" aria-label="Subscribe"><i class="fas fa-arrow-right"></i></button>
+      </form>
+      <p class="newsletter-msg" id="newsletterMsg"></p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 Skinora. All Rights Reserved.</p>
+    <div class="payment-icons">
+      <i class="fas fa-lock" title="Secure Payments"></i>
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
+    </div>
+  </div>
+</footer>
+
+<script>
+    // ---- ALL PRODUCTS DATA ----
+      const IMG = {
+    p1: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=800',
+    p2: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&q=80&w=800',
+    p3: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&q=80&w=800',
+    p4: 'https://images.unsplash.com/photo-1585232351009-aa87416fca90?auto=format&fit=crop&q=80&w=800',
+    p5: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=800',
+    p6: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=800',
+    p7: 'https://images.unsplash.com/photo-1600428877878-1a0fd85beda8?auto=format&fit=crop&q=80&w=800',
+    p8: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&q=80&w=800',
+    p9: 'https://images.unsplash.com/photo-1631730359585-38a4935cbec4?auto=format&fit=crop&q=80&w=800',
+    p10: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=800',
+    p11: 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?auto=format&fit=crop&q=80&w=800',
+    p12: 'https://images.unsplash.com/photo-1585652757173-57de5e9fab42?auto=format&fit=crop&q=80&w=800',
+    p13: 'https://images.unsplash.com/photo-1580870069867-74c57ee1bb07?auto=format&fit=crop&q=80&w=800',
+    p14: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&q=80&w=800',
+    p15: 'https://images.unsplash.com/photo-1567721913486-6585f069b332?auto=format&fit=crop&q=80&w=800',
+    p16: 'https://images.unsplash.com/photo-1601049676869-702ea24cfd58?auto=format&fit=crop&q=80&w=800',
+    p17: 'https://images.unsplash.com/photo-1571875257727-256c39da42af?auto=format&fit=crop&q=80&w=800'
+  };
+
+  const products = [
+    { id: 1, brand: 'Cetaphil', name: 'Gentle Skin Cleanser 500ml', price: 6200, skin: 'All Skin Types', image: IMG.p5, desc: 'The iconic gentle cleanser that removes dirt while maintaining moisture. Suitable for all skin types, it\'s clinically tested and non-comedogenic.', benefits: ['Removes dirt and makeup', 'Maintains natural moisture balance', 'Non-comedogenic', 'Clinically tested'], howToUse: 'Apply to wet or dry skin. Rinse thoroughly or wipe off with a soft cloth. For daily use, morning and night.', ingredients: 'Water, Cetyl Alcohol, Propylene Glycol, Sodium Lauryl Sulfate, Stearyl Alcohol, Methylparaben, Propylparaben, Butylparaben.' },
+    { id: 2, brand: 'Cetaphil', name: 'Moisturizing Cream 566g', price: 9800, skin: 'Dry/Sensitive', image: IMG.p16, desc: 'Rich, non-greasy cream specially formulated for chronically dry skin. Provides immediate and long-lasting relief for very dry, sensitive skin.', benefits: ['48-hour moisturization', 'Restores skin barrier', 'Non-greasy formula', 'Fragrance free'], howToUse: 'Apply to affected areas as needed. Can be used on face and body.', ingredients: 'Water, Glycerin, Petrolatum, Dicaprylyl Ether, Dimethicone, Tocopheryl Acetate, Panthenol, Niacinamide, Sodium Hyaluronate.' },
+    { id: 3, brand: 'Cetaphil', name: 'Daily Advance Hydrating Lotion', price: 6800, skin: 'Dry Skin', image: IMG.p4, desc: 'Clinically proven to hydrate for 48 hours. Lightweight lotion that absorbs quickly for smooth, soft skin all day long.', benefits: ['48-hour hydration', 'Lightweight formula', 'Fast absorbing', 'Dermatologist recommended'], howToUse: 'Apply liberally to skin as needed. Best applied after bathing while skin is still slightly damp.', ingredients: 'Water, Glycerin, Hydrogenated Polyisobutene, Dimethicone, Cetearyl Alcohol, Niacinamide, Tocopheryl Acetate, Sodium Hyaluronate.' },
+    { id: 4, brand: 'Cetaphil', name: 'Bright Healthy Radiance Night Cream', price: 8350, skin: 'Dull Skin', image: IMG.p9, desc: 'Brightens and evens skin tone without irritating the skin barrier. Formulated with Vitamin C complex for overnight radiance.', benefits: ['Brightens skin tone', 'Reduces dark spots', 'Overnight repair', 'Vitamin C complex'], howToUse: 'Apply gently to face and neck every night after cleansing. Follow with your regular moisturizer if needed.', ingredients: 'Water, Niacinamide, Ascorbyl Glucoside, Panthenol, Glycerin, Dimethicone, Allantoin, Tocopheryl Acetate.' },
+    { id: 5, brand: 'Cetaphil', name: 'Oily Skin Cleanser 125ml', price: 4200, skin: 'Oily/Acne', image: IMG.p6, desc: 'Reduces excess oil and shine while deep cleaning pores. Specially formulated for oily and acne-prone skin.', benefits: ['Controls oil and shine', 'Deep pore cleansing', 'Reduces breakouts', 'Gentle formula'], howToUse: 'Wet face with lukewarm water. Apply a small amount and work into a lather. Rinse thoroughly.', ingredients: 'Water, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycerin, Niacinamide, Zinc Gluconate, Salicylic Acid.' },
+    { id: 6, brand: 'Cetaphil', name: 'Optimal Hydration Serum', price: 6000, skin: 'Dehydrated', image: IMG.p12, desc: 'Instantly absorbs to deeply replenish skin\'s hydration. A lightweight serum that provides up to 72 hours of continuous hydration.', benefits: ['72-hour hydration', 'Instant absorption', 'Plumps skin', 'Hyaluronic acid complex'], howToUse: 'Apply 2-3 drops to clean skin before moisturizer. Gently press into skin until absorbed.', ingredients: 'Water, Glycerin, Sodium Hyaluronate, Hyaluronic Acid, Panthenol, Niacinamide, Allantoin, Betaine.' },
+    { id: 7, brand: 'Cetaphil', name: 'Gentle Salicylic Acid Cleanser', price: 6200, skin: 'Acne Prone', image: IMG.p1, desc: 'Exfoliates to clear breakouts while remaining gentle on skin. Contains 0.5% Salicylic Acid to unclog pores without irritation.', benefits: ['Clears breakouts', 'Unclogs pores', 'Gentle exfoliation', 'Salicylic acid 0.5%'], howToUse: 'Use morning and/or night. Wet face, apply cleanser, massage gently for 30 seconds, rinse thoroughly.', ingredients: 'Water, Glycerin, Cocamidopropyl Betaine, Salicylic Acid 0.5%, Niacinamide, Zinc PCA, Sodium PCA.' },
+    { id: 8, brand: 'Cetaphil', name: 'Hydrating Eye Gel Cream', price: 7900, skin: 'All Skin', image: IMG.p7, desc: 'Deeply hydrates the delicate under-eye area for 24 hours. Reduces the appearance of puffiness and fine lines.', benefits: ['24-hour hydration', 'Reduces puffiness', 'Lightweight gel texture', 'Fragrance free'], howToUse: 'Gently pat a small amount around the eye area morning and night. Avoid direct contact with eyes.', ingredients: 'Water, Glycerin, Sodium Hyaluronate, Caffeine, Niacinamide, Allantoin, Panthenol, Carbomer.' },
+    { id: 9, brand: 'Cetaphil', name: 'Gentle Clear Clarifying Acne Cream', price: 7500, skin: 'Acne', image: IMG.p3, desc: 'Treats acne and minimizes the appearance of pores. Formulated with Benzoyl Peroxide to fight breakouts effectively.', benefits: ['Fights acne bacteria', 'Minimizes pores', 'Reduces blemishes', 'Moisturizes while treating'], howToUse: 'Apply a thin layer to affected areas once daily. Increase to twice daily if tolerated.', ingredients: 'Water, Benzoyl Peroxide 2.5%, Glycerin, Dimethicone, Niacinamide, Allantoin, Panthenol.' },
+    { id: 10, brand: 'Cetaphil', name: 'Sun SPF 50+ Light Gel', price: 8900, skin: 'Sensitive', image: IMG.p2, desc: 'High UV protection for sensitive skin in a light gel format. Broad spectrum SPF 50+ with UVA and UVB protection.', benefits: ['SPF 50+ protection', 'No white cast', 'Water resistant', 'Non-greasy gel'], howToUse: 'Apply generously 15 minutes before sun exposure. Reapply every 2 hours or after swimming.', ingredients: 'Aqua, Ethylhexyl Methoxycinnamate, Bis-Ethylhexyloxyphenol Methoxyphenyl Triazine, Titanium Dioxide, Glycerin, Niacinamide.' },
+    { id: 11, brand: 'Cetaphil', name: 'Rich Night Cream with HA', price: 7800, skin: 'Dry Skin', image: IMG.p10, desc: 'Intense hydration with Hyaluronic Acid for overnight recovery. Wakes up to plumper, softer, more radiant looking skin.', benefits: ['Hyaluronic Acid complex', 'Overnight repair', 'Deep moisturization', 'Anti-aging support'], howToUse: 'Apply to face and neck every night as the last step in your skincare routine.', ingredients: 'Water, Glycerin, Sodium Hyaluronate, Hyaluronic Acid, Niacinamide, Panthenol, Tocopheryl Acetate, Shea Butter.' },
+    { id: 12, brand: 'Cetaphil', name: 'Daily Facial Cleanser 237ml', price: 5400, skin: 'Normal/Oily', image: IMG.p15, desc: 'Removes surface oils, dirt and makeup without leaving skin tight or dry. A gentle daily cleanser for normal to oily skin.', benefits: ['Removes excess oil', 'Non-comedogenic', 'Leaves no residue', 'Refreshing formula'], howToUse: 'Apply to wet face, massage in circular motions for 30 seconds, rinse with warm water.', ingredients: 'Water, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Niacinamide, Glycerin, Panthenol, Allantoin.' },
+
+    { id: 16, brand: 'CeraVe', name: 'Foaming Facial Cleanser 355ml', price: 10850, skin: 'Oily Skin', image: IMG.p6, desc: 'Developed with dermatologists to cleanse and remove excess oil without disrupting the skin\'s natural barrier.', benefits: ['Removes excess oil', '3 essential ceramides', 'Hyaluronic Acid', 'Non-comedogenic'], howToUse: 'Wet face with lukewarm water. Apply cleanser and work into a gentle lather. Rinse well.', ingredients: 'Water, Sodium Lauroyl Sarcosinate, Niacinamide, Sodium Hyaluronate, Ceramide NP, Ceramide AP, Ceramide EOP, Phytosphingosine, Cholesterol.' },
+    { id: 17, brand: 'CeraVe', name: 'Moisturizing Cream 453g', price: 12350, skin: 'Dry Skin', image: IMG.p16, desc: 'Contains 3 essential ceramides to hydrate and restore the skin barrier. With MVE technology for 24-hour hydration.', benefits: ['3 essential ceramides', '24-hour hydration', 'Restores skin barrier', 'Non-greasy'], howToUse: 'Apply to face and/or body once or twice daily. Use after cleansing for best results.', ingredients: 'Water, Glycerin, Behentrimonium Methosulfate, Cetyl Alcohol, Ceramide NP, Ceramide AP, Ceramide EOP, Niacinamide, Hyaluronic Acid.' },
+    { id: 18, brand: 'CeraVe', name: 'Hydrating Cleanser 473ml', price: 18460, skin: 'Normal/Dry', image: IMG.p5, desc: 'Cleanses and hydrates without disrupting the protective skin barrier. Gentle enough for everyday use.', benefits: ['Hydrating while cleansing', 'No harsh sulfates', 'Ceramide enriched', 'Fragrance free'], howToUse: 'Massage into wet skin, rinse thoroughly. Safe for morning and evening use.', ingredients: 'Water, Glycerin, Behentrimonium Methosulfate, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Niacinamide.' },
+    { id: 19, brand: 'CeraVe', name: 'SA Smoothing Cleanser', price: 9700, skin: 'Rough/Bumpy', image: IMG.p1, desc: 'Gently exfoliates with Salicylic Acid to smooth rough skin texture. With ceramides to maintain the skin barrier.', benefits: ['Salicylic Acid exfoliant', 'Smooths rough patches', 'Ceramide barrier support', 'Gentle daily use'], howToUse: 'Apply to wet skin and massage gently. Rinse thoroughly. Use morning and/or night.', ingredients: 'Water, Salicylic Acid 0.5%, Glycerin, Ceramide NP, Ceramide AP, Ceramide EOP, Niacinamide, Lactic Acid.' },
+    { id: 20, brand: 'CeraVe', name: 'PM Facial Moisturizing Lotion', price: 8900, skin: 'Night Care', image: IMG.p4, desc: 'Ultra-lightweight night moisturizer with MVE technology. Contains niacinamide to calm and soothe skin overnight.', benefits: ['Ultra-lightweight', 'MVE technology', 'Niacinamide enriched', 'Oil free'], howToUse: 'Apply to face and neck at night after cleansing and toning.', ingredients: 'Water, Glycerin, Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Dimethicone.' },
+    { id: 21, brand: 'CeraVe', name: 'Renewing SA Lotion 237ml', price: 7200, skin: 'Rough Skin', image: IMG.p9, desc: 'Improves skin texture while restoring the barrier with ceramides. Salicylic acid formula for bumpy, rough body skin.', benefits: ['Smooths skin texture', 'Ceramide barrier repair', 'Lightweight lotion', 'Fragrance free'], howToUse: 'Apply to affected areas once or twice daily. Avoid eye area.', ingredients: 'Water, Salicylic Acid, Glycerin, Ceramide NP, Ceramide AP, Ceramide EOP, Ammonium Lactate, Niacinamide.' },
+    { id: 22, brand: 'CeraVe', name: 'Vitamin C Serum with HA', price: 13900, skin: 'Brightening', image: IMG.p12, desc: 'Skin brightening serum with 10% pure Vitamin C and hyaluronic acid for a radiant, even complexion.', benefits: ['10% Vitamin C', 'Hyaluronic Acid', 'Brightens dark spots', 'Ceramide barrier support'], howToUse: 'Apply 3-4 drops to clean, dry skin every morning. Follow with SPF. Avoid eye area.', ingredients: 'Water, Ascorbic Acid 10%, Sodium Hyaluronate, Ceramide NP, Ceramide AP, Ceramide EOP, Niacinamide, Vitamin E.' },
+    { id: 23, brand: 'CeraVe', name: 'Resurfacing Retinol Serum', price: 15830, skin: 'Post-Acne', image: IMG.p10, desc: 'Helps smooth skin texture and reduces the appearance of post-acne marks. Encapsulated retinol with ceramides.', benefits: ['Encapsulated retinol', 'Reduces post-acne marks', 'Smooths skin texture', 'Ceramide enriched'], howToUse: 'Apply a pea-sized amount to face at night. Start 2-3 times per week and gradually increase.', ingredients: 'Water, Encapsulated Retinol, Niacinamide, Licorice Root Extract, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid.' },
+    { id: 24, brand: 'CeraVe', name: 'Blemish Control Gel', price: 9860, skin: 'Acne Prone', image: IMG.p3, desc: 'Clears acne and prevents new breakouts with AHA and BHA combination. Lightweight gel for acne-prone skin.', benefits: ['AHA + BHA blend', 'Clears and prevents acne', 'Oil free formula', 'Non-comedogenic'], howToUse: 'After cleansing, apply a thin layer to the entire face morning and night.', ingredients: 'Water, Niacinamide, Glycolic Acid, Salicylic Acid, Ceramide NP, Ceramide AP, Ceramide EOP, Zinc PCA.' },
+    { id: 25, brand: 'CeraVe', name: 'Skin Renewing Eye Cream', price: 9950, skin: 'Anti-Aging', image: IMG.p7, desc: 'Reduces puffiness and dark circles while firming the eye area. Contains caffeine and peptides.', benefits: ['Reduces dark circles', 'Firms eye area', 'Caffeine + peptides', 'Lightweight formula'], howToUse: 'Gently pat around the eye area morning and night using your ring finger.', ingredients: 'Water, Glycerin, Caffeine, Niacinamide, Ceramide NP, Ceramide AP, Ceramide EOP, Peptides, Hyaluronic Acid.' },
+    { id: 26, brand: 'CeraVe', name: 'Daily Moisturizing Lotion 355ml', price: 12500, skin: 'All Skin', image: IMG.p11, desc: 'Oil-free moisturizer for 24-hour hydration. With ceramides and hyaluronic acid for face and body.', benefits: ['24-hour hydration', 'Oil free', 'Ceramide enriched', 'For face and body'], howToUse: 'Apply to face and body once or twice daily. Ideal after shower while skin is slightly damp.', ingredients: 'Water, Glycerin, Cetyl Alcohol, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Niacinamide.' },
+    { id: 27, brand: 'CeraVe', name: 'Hydrating Mineral Sunscreen SPF 50', price: 8500, skin: 'Sensitive', image: IMG.p2, desc: '100% mineral sunscreen filters provide broad spectrum protection. Gentle formula with ceramides and niacinamide.', benefits: ['100% mineral filters', 'Broad spectrum SPF 50', 'No chemical UV filters', 'Ceramide enriched'], howToUse: 'Apply generously 15 minutes before sun exposure. Reapply every 2 hours.', ingredients: 'Titanium Dioxide, Zinc Oxide, Glycerin, Ceramide NP, Ceramide AP, Ceramide EOP, Niacinamide, Hyaluronic Acid.' },
+
+    { id: 31, brand: 'Korean', name: 'COSRX Snail Mucin Essence 100ml', price: 8500, skin: 'Glass Skin', image: IMG.p12, desc: '96% snail secretion filtrate for intense repair and glow. Brightens, hydrates and repairs damaged skin.', benefits: ['96% snail mucin', 'Repairs skin barrier', 'Brightens complexion', 'Intense hydration'], howToUse: 'After toner, pat essence evenly onto face. Follow with moisturizer. Use morning and night.', ingredients: 'Snail Secretion Filtrate 96.3%, Betaine, 1,2-Hexanediol, Sodium Hyaluronate, Allantoin, Sodium Polyacrylate.' },
+    { id: 32, brand: 'Korean', name: 'Beauty of Joseon Relief Sun', price: 5800, skin: 'Sun Protection', image: IMG.p4, desc: 'Rice and probiotics sunscreen with zero white cast. Lightweight, breathable formula beloved in K-Beauty.', benefits: ['Zero white cast', 'Rice extract + probiotics', 'SPF 50+ PA++++', 'Lightweight texture'], howToUse: 'Apply generously to face 30 minutes before sun exposure. Pat gently until absorbed.', ingredients: 'Water, Ethylhexyl Methoxycinnamate, Cyclopentasiloxane, Titanium Dioxide, Rice Extract, Lactobacillus Ferment, Niacinamide.' },
+    { id: 33, brand: 'Korean', name: 'Anua Heartleaf 77% Soothing Toner', price: 7950, skin: 'Irritated Skin', image: IMG.p11, desc: 'The #1 viral toner in Korea for calming troubled skin. 77% Heartleaf extract instantly cools and soothes redness.', benefits: ['77% Heartleaf extract', 'Calms redness', 'Barrier-strengthening', 'Gentle formula'], howToUse: 'After cleansing, apply to face with cotton pad or pat directly with clean hands. Follow with serum.', ingredients: 'Heartleaf (Houttuynia Cordata) Extract 77%, Glycerin, 1,2-Hexanediol, Niacinamide, Panthenol, Centella Asiatica Extract.' },
+    { id: 34, brand: 'Korean', name: 'AXIS-Y Dark Spot Glow Serum', price: 8950, skin: 'Hyperpigmentation', image: IMG.p10, desc: 'Niacinamide-based serum that corrects dark spots and delivers a luminous glow.', benefits: ['Niacinamide 5%', 'Corrects dark spots', 'Radiance boosting', 'Even skin tone'], howToUse: 'Apply 2-3 drops to cleansed skin morning and night. Gently press in until absorbed.', ingredients: 'Water, Niacinamide 5%, Glycerin, Sodium Hyaluronate, Tranexamic Acid, Portulaca Oleracea Extract, Panthenol.' },
+    { id: 35, brand: 'Korean', name: 'COSRX Low pH Morning Cleanser', price: 5250, skin: 'Morning Routine', image: IMG.p5, desc: 'Gentle gel cleanser that won\'t strip natural oils. Maintains optimal skin pH for a healthy skin microbiome.', benefits: ['Low pH formula', 'Gentle gel texture', 'Maintains skin pH', 'BHA gentle cleanse'], howToUse: 'Apply to wet face, massage gently for 30 seconds, rinse. Best used in the morning.', ingredients: 'Water, Cocamidopropyl Betaine, Sodium Lauroyl Methyl Isethionate, BHA, Tea Tree Oil, Willow Bark Extract.' },
+    { id: 36, brand: 'Korean', name: 'Laneige Lip Sleeping Mask Berry', price: 1950, skin: 'Lips', image: IMG.p17, desc: 'Overnight treatment for soft, plump lips. Vitamin C complex removes dead skin cells while you sleep.', benefits: ['Overnight lip repair', 'Berry scent', 'Vitamin C complex', 'Intensely moisturizing'], howToUse: 'Apply a generous amount to lips at night as the last step in your routine. Remove in the morning.', ingredients: 'Hydrogenated Polyisobutene, Polybutene, Diphenylsiloxy Phenyl Trimethicone, Bis-Diglyceryl Polyacyladipate-2, Berry Complex, Vitamin C.' },
+    { id: 37, brand: 'Korean', name: 'Medicube Collagen Jelly Cream', price: 11950, skin: 'Firming', image: IMG.p16, desc: 'Elasticity-boosting cream for bouncy, firm skin. Triple collagen complex delivers a plumped, jelly-like finish.', benefits: ['Triple collagen complex', 'Firms and plumps', 'Jelly texture', 'Anti-aging support'], howToUse: 'Apply to face after serum as the last moisturizing step. Use morning and night.', ingredients: 'Water, Glycerin, Collagen, Hydrolyzed Collagen, Marine Collagen, Sodium Hyaluronate, Niacinamide, Peptides.' },
+    { id: 38, brand: 'Korean', name: 'Anua Niacinamide 10% + TXA Serum', price: 8500, skin: 'Dark Spots', image: IMG.p9, desc: 'High-strength brightening solution for clear, even skin. Combines 10% Niacinamide with Tranexamic Acid.', benefits: ['Niacinamide 10%', 'Tranexamic Acid', 'Fades dark spots', 'Evens skin tone'], howToUse: 'After toner, apply 2-3 drops to face. Gently press and pat until fully absorbed.', ingredients: 'Water, Niacinamide 10%, Tranexamic Acid, Glycerin, Sodium Hyaluronate, Heartleaf Extract, Panthenol, Allantoin.' },
+    { id: 39, brand: 'Korean', name: 'Innisfree Green Tea Seed Serum', price: 7800, skin: 'Hydration', image: IMG.p13, desc: 'Picks up hydration and maintains it deep within skin using fresh green tea seed oil from Jeju Island.', benefits: ['Jeju green tea seed oil', 'Deep hydration', 'Antioxidant protection', 'Lightweight serum'], howToUse: 'After toner, apply 2-3 drops and gently press into skin. Can be layered.', ingredients: 'Water, Green Tea Seed Oil, Green Tea Extract, Glycerin, Sodium Hyaluronate, Niacinamide, Panthenol, Betaine.' },
+    { id: 40, brand: 'Korean', name: 'Beauty of Joseon Dynasty Cream', price: 6500, skin: 'Classic K-Beauty', image: IMG.p15, desc: 'Hanbang (traditional Korean medicine) formula for healthy glow. Ginseng and rice extracts for bright, nourished skin.', benefits: ['Ginseng extract', 'Rice water complex', 'Traditional Hanbang formula', 'Deep nourishment'], howToUse: 'Apply as the final moisturizing step in your routine. Use morning and night.', ingredients: 'Water, Rice Extract, Niacinamide, Ginseng Root Extract, Glycerin, Sodium Hyaluronate, Panthenol, Allantoin.' },
+    { id: 41, brand: 'Korean', name: 'Some By Mi AHA BHA PHA Toner', price: 5900, skin: 'Exfoliation', image: IMG.p8, desc: 'Works as an effective exfoliator to leave skin cleaner and more radiant. Triple acid blend for smooth skin.', benefits: ['Triple acid formula', 'AHA + BHA + PHA', 'Smooths texture', 'Brightening effect'], howToUse: 'After cleansing, apply to face with a cotton pad. Start 2-3 times per week.', ingredients: 'Water, AHA (Glycolic Acid), BHA (Salicylic Acid), PHA (Gluconolactone), Tea Tree Extract, Centella Asiatica, Niacinamide.' },
+    { id: 42, brand: 'Korean', name: 'Round Lab Birch Juice Cream', price: 8200, skin: 'Cooling Hydration', image: IMG.p14, desc: 'Voted #1 moisturizer in Korea for deep hydration. Birch juice base for refreshing, long-lasting moisture.', benefits: ['Birch juice base', 'Deep hydration', 'Refreshing texture', 'Barrier strengthening'], howToUse: 'Apply as the last step in your skincare routine morning and night. Use sparingly on oily areas.', ingredients: 'Birch Juice, Glycerin, Niacinamide, Sodium Hyaluronate, Beta-Glucan, Ceramide, Panthenol, Allantoin.' }
+  ];
+
+    let cart = JSON.parse(localStorage.getItem('Skinora_cart') || '[]');
+    function saveCart() { localStorage.setItem('Skinora_cart', JSON.stringify(cart)); }
+
+    // Get product ID from URL
+    const params = new URLSearchParams(window.location.search);
+    const productId = parseInt(params.get('id'));
+    const product = products.find(p => p.id === productId);
+
+    if (!product) {
+      document.body.innerHTML += '<div style="padding:150px 5%; text-align:center;"><h2>Product not found.</h2><a href="index.html">â† Back to Shop</a></div>';
+    } else {
+      // Set breadcrumb
+      document.getElementById('bcBrand').textContent = product.brand;
+      document.getElementById('bcName').textContent = product.name;
+      document.title = `Skinora | ${product.name}`;
+
+      // Set main image
+      document.getElementById('mainImg').src = product.image;
+
+      // Build thumbnails — use same image for now (can be expanded later)
+      const thumbImages = [product.image];
+      const thumbRow = document.getElementById('thumbRow');
+      thumbImages.forEach((src, i) => {
+        const div = document.createElement('div');
+        div.className = 'thumb' + (i === 0 ? ' active' : '');
+        div.innerHTML = `<img src="${src}" onerror="this.src='https://via.placeholder.com/80'">`;
+        div.onclick = () => {
+          document.getElementById('mainImg').src = src;
+          document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+          div.classList.add('active');
+        };
+        thumbRow.appendChild(div);
+      });
+
+      // Fill info
+      document.getElementById('pBrand').textContent = product.brand;
+      document.getElementById('pName').textContent = product.name;
+      document.getElementById('pSkin').textContent = product.skin;
+      document.getElementById('pDesc').textContent = product.desc;
+      document.getElementById('pPrice').textContent = `Rs. ${product.price.toLocaleString()}`;
+
+      // Tabs
+      document.getElementById('tabDesc').textContent = product.desc;
+      document.getElementById('tabBenefits').innerHTML = product.benefits.map(b => `<li>${b}</li>`).join('');
+      document.getElementById('tabHowTo').textContent = product.howToUse;
+      document.getElementById('tabIngredients').textContent = product.ingredients;
+
+      // Related products (same brand, exclude current)
+      const related = products.filter(p => p.brand === product.brand && p.id !== product.id).slice(0, 4);
+      document.getElementById('relatedGrid').innerHTML = related.map(p => `
+        <a class="related-card" href="product.html?id=${p.id}">
+          <div class="related-img">
+            <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/200'">
+          </div>
+          <p class="related-brand">${p.brand}</p>
+          <p class="related-name">${p.name}</p>
+          <p class="related-price">Rs. ${p.price.toLocaleString()}</p>
+        </a>
+      `).join('');
+    }
+
+    // Tab switching
+    function openTab(tab, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    // Cart
+    function updateCart() {
+      document.getElementById('cartCount').innerText = cart.length;
+      const container = document.getElementById('cartContainer');
+      let total = 0;
+      container.innerHTML = cart.map((item, idx) => {
+        total += item.price;
+        return `
+          <div class="cart-item">
+            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/70'">
+            <div style="flex:1">
+              <p style="font-size:0.8rem; font-weight:700;">${item.name}</p>
+              <p style="font-size:0.8rem;">Rs. ${item.price.toLocaleString()}</p>
+            </div>
+            <i class="fas fa-trash" onclick="removeFromCart(${idx})" style="cursor:pointer; color:#999;"></i>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('totalPrice').innerText = `Rs. ${total.toLocaleString()}`;
+    }
+
+    function removeFromCart(idx) { cart.splice(idx, 1); saveCart(); updateCart(); }
+    function toggleCart() { document.getElementById('cartOverlay').classList.toggle('active'); }
+
+    function subscribeNewsletter(e) {
+      e.preventDefault();
+      document.getElementById('newsletterMsg').textContent = '✓ Thanks for subscribing!';
+      e.target.reset();
+      return false;
+    }
+
+    function addToCartFromPage() {
+      if (!product) return;
+      const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+      for (let i = 0; i < qty; i++) cart.push(product);
+      saveCart();
+      updateCart();
+      const btn = document.getElementById('addBtn');
+      btn.textContent = '✓ Added to Bag!';
+      btn.classList.add('added');
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-shopping-bag" style="margin-right:8px;"></i> Add to Bag';
+        btn.classList.remove('added');
+      }, 2000);
+      document.getElementById('cartOverlay').classList.add('active');
+    }
+
+    updateCart();
+</script>
+</body>
+</html>
