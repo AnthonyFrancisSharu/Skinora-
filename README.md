@@ -41,27 +41,4 @@ Skinora is a front-end e-commerce demo for a Sri Lankan skincare store, offering
 - [Font Awesome](https://fontawesome.com/) for icons
 - [AOS](https://michalsnik.github.io/aos/) for scroll animations
 
-## Running Locally
 
-No installation or build step is needed — just open the file in a browser:
-
-```bash
-open index.html   # macOS
-start index.html  # Windows
-```
-
-Or serve it with any static file server, e.g.:
-
-```bash
-npx serve .
-```
-
-## Project Structure
-
-```
-index.html    # Homepage — hero, product grid, filters, search, cart
-product.html  # Product detail page (accessed via product.html?id=<id>)
-screenshots/  # README screenshots
-```
-
-Product data currently lives inline in each page's `<script>` block.
