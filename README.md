@@ -4,23 +4,35 @@ Skinora is a front-end e-commerce demo for a Sri Lankan skincare store, offering
 
 ## Features
 
-- **Product catalog** - 36 products across three categories (Cetaphil, CeraVe, K-Beauty), 12 per category, with brand filtering and live search.
-- **Product detail pages** - image gallery, pricing, skin-type badge, tabbed details (Description, Benefits, How to Use, Ingredients, Shipping), and related products.
-- **Shopping bag** - add/remove items, persisted in `localStorage`, with a slide-out cart panel and running subtotal.
+- **Product catalog** — 36 products across three categories (Cetaphil, CeraVe, K-Beauty), 12 per category, with brand filtering and live search.
+- **Product detail pages** — image gallery, pricing, skin-type badge, tabbed details (Description, Benefits, How to Use, Ingredients, Shipping), and related products.
+- **Shopping bag** — add/remove items, persisted in `localStorage`, with a slide-out cart panel and running subtotal.
 - **Newsletter signup** in the footer.
 - Responsive layout for mobile and desktop.
 
-## Home Page
-<img width="1895" height="917" alt="Homepage hero section" src="https://github.com/user-attachments/assets/e9389b1c-eb10-4e7c-8dda-7d79fea24bf4" />
-<img width="1904" height="840" alt="Homepage product collection grid" src="https://github.com/user-attachments/assets/72dcf02a-29ea-46ac-bb06-c91a4ac15a7f" />
+## Screenshots
 
-## Product Details Page
-<img width="1896" height="918" alt="Product detail view" src="https://github.com/user-attachments/assets/6324026e-3628-4290-9b92-4357466cc74d" />
-<img width="1765" height="784" alt="Related products section" src="https://github.com/user-attachments/assets/a4fc2dba-aa15-493d-b093-09677e42d6e3" />
-<img width="1895" height="906" alt="Related products and footer" src="https://github.com/user-attachments/assets/dfd1881d-5ff9-4c15-9e58-3d34e6803478" />
+### Home Page
+<img src="screenshots/home-hero.png" width="800" alt="Homepage hero section" />
+<img src="screenshots/home-collection.png" width="800" alt="Homepage product collection grid" />
 
-## Shopping Cart
-<img width="518" height="909" alt="Shopping bag sidebar" src="https://github.com/user-attachments/assets/379467a6-8a7c-4313-9627-9a014fe35059" />
+### Category Filters
+<img src="screenshots/category-cetaphil.png" width="800" alt="Cetaphil category filter" />
+<img src="screenshots/category-cerave.png" width="800" alt="CeraVe category filter" />
+<img src="screenshots/category-kbeauty.png" width="800" alt="K-Beauty category filter" />
+
+### Search
+<img src="screenshots/search.png" width="800" alt="Live search results" />
+
+### Product Details Page
+<img src="screenshots/product-detail.png" width="800" alt="Product detail view" />
+<img src="screenshots/related-products.png" width="800" alt="Related products section" />
+
+### Shopping Cart
+<img src="screenshots/cart-sidebar.png" width="800" alt="Shopping bag sidebar" />
+
+### Footer
+<img src="screenshots/footer.png" width="800" alt="Site footer" />
 
 ## Tech Stack
 
@@ -29,3 +41,27 @@ Skinora is a front-end e-commerce demo for a Sri Lankan skincare store, offering
 - [Font Awesome](https://fontawesome.com/) for icons
 - [AOS](https://michalsnik.github.io/aos/) for scroll animations
 
+## Running Locally
+
+No installation or build step is needed — just open the file in a browser:
+
+```bash
+open index.html   # macOS
+start index.html  # Windows
+```
+
+Or serve it with any static file server, e.g.:
+
+```bash
+npx serve .
+```
+
+## Project Structure
+
+```
+index.html    # Homepage — hero, product grid, filters, search, cart
+product.html  # Product detail page (accessed via product.html?id=<id>)
+screenshots/  # README screenshots
+```
+
+Product data currently lives inline in each page's `<script>` block.
